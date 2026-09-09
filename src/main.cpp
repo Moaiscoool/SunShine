@@ -1,51 +1,24 @@
+#include "core/render.hpp"
 #include <SDL3/SDL.h>
+#include <iostream>
 
-int main(int argc, char* argv[])
-{
-    (void)argc;
-    (void)argv;
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
+    SDL_Window* window = nullptr;
 
-    if (!SDL_Init(SDL_INIT_VIDEO))
-    {
-        SDL_Log("SDL initialization failed: %s", SDL_GetError());
-        return 1;
-    }
+    windowInit(&window, "SunShine", 1280, 720);
 
-    SDL_Window* window = SDL_CreateWindow(
-        "My Game",
-        1280,
-        720,
-        0
-    );
+    bool active = 1;
+    
+    int update = 0;
 
-    if (window == nullptr)
-    {
-        SDL_Log("Window creation failed: %s", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-
-    bool running = true;
-
-    while (running)
-    {
-        SDL_Event event;
-
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_EVENT_QUIT)
-            {
-                running = false;
-            }
-        }
-
-        // Game update will go here.
-
-        // Rendering will go here.
+    while(1){
+        std::cout << update;
+        update++;
+        SDL_Delay(30);
     }
 
     SDL_DestroyWindow(window);
-    SDL_Quit();
 
+    SDL_Quit();
     return 0;
 }

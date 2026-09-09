@@ -49,9 +49,16 @@ endif()
 # Game Executable
 # ==================================================
 
-add_executable(${GAME_NAME}
-    src/main.cpp
+# Find all .cpp files in the src/ directory automatically
+file(GLOB_RECURSE GAME_SOURCES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
+
+# Pass the collected list of files to the executable
+add_executable(${GAME_NAME}
+    ${GAME_SOURCES}
+)
+
 
 # ==================================================
 # Include Directories
