@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.20)
 
 set(GAME_NAME "SunShine")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(${GAME_NAME}
     VERSION 0.1.0
     LANGUAGES CXX
@@ -25,6 +27,7 @@ include(FetchContent)
 find_package(SDL3 CONFIG QUIET)
 
 if(NOT SDL3_FOUND)
+
     message(STATUS "SDL3 was not found.")
     message(STATUS "Downloading SDL3...")
 
@@ -41,41 +44,59 @@ if(NOT SDL3_FOUND)
     FetchContent_MakeAvailable(SDL3)
 
     message(STATUS "SDL3 downloaded and configured.")
+
 else()
+
     message(STATUS "Found system SDL3.")
+
 endif()
+
+# ==================================================
+# Source Files
+# ==================================================
+
+file(GLOB_RECURSE ENGINE_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/engine/src/*.cpp"
+)
+
+file(GLOB_RECURSE GAME_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/game/src/*.cpp"
+)
+
+# ==================================================
+# Engine Library
+# ==================================================
+
+add_library(GameEngine STATIC
+    ${ENGINE_SOURCES}
+)
+
+target_include_directories(GameEngine
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/include
+)
+
+target_link_libraries(GameEngine
+    PUBLIC
+        SDL3::SDL3
+)
 
 # ==================================================
 # Game Executable
 # ==================================================
 
-# Find all .cpp files in the src/ directory automatically
-file(GLOB_RECURSE GAME_SOURCES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-)
-
-# Pass the collected list of files to the executable
 add_executable(${GAME_NAME}
     ${GAME_SOURCES}
 )
 
-
-# ==================================================
-# Include Directories
-# ==================================================
-
 target_include_directories(${GAME_NAME}
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/game/include
 )
-
-# ==================================================
-# Libraries
-# ==================================================
 
 target_link_libraries(${GAME_NAME}
     PRIVATE
-        SDL3::SDL3
+        GameEngine
 )
 
 # ==================================================
@@ -84,6 +105,11 @@ target_link_libraries(${GAME_NAME}
 
 if(MSVC)
 
+    target_compile_options(GameEngine
+        PRIVATE
+            /W4
+    )
+
     target_compile_options(${GAME_NAME}
         PRIVATE
             /W4
@@ -91,12 +117,18 @@ if(MSVC)
 
 else()
 
+    target_compile_options(GameEngine
+        PRIVATE
+            -Wall
+            -Wextra
+            -Wpedantic
+    )
+
     target_compile_options(${GAME_NAME}
         PRIVATE
             -Wall
             -Wextra
             -Wpedantic
-
     )
 
 endif()
@@ -119,5 +151,7 @@ message(STATUS " Game Configuration")
 message(STATUS "======================================")
 message(STATUS " Game: ${GAME_NAME}")
 message(STATUS " Version: ${PROJECT_VERSION}")
+message(STATUS " Engine sources: ${ENGINE_SOURCES}")
+message(STATUS " Game sources: ${GAME_SOURCES}")
 message(STATUS "======================================")
 message(STATUS "")
