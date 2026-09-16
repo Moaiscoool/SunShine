@@ -1,6 +1,4 @@
-#include <engine/platform/window.hpp>
-#include <SDL3/SDL.h>
-#include <iostream>
+#include <engine/engine.hpp>
 
 int windowInit(SDL_Window** window, SDL_Renderer** renderer, const char* windowName, int width, int height) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -22,20 +20,8 @@ int windowInit(SDL_Window** window, SDL_Renderer** renderer, const char* windowN
         return -1; 
     }
 
-    std::cout << "Window \"" << windowName << "\" Creation Succeeded\n";
+    std::string windowNameString(windowName);
+    InfoLog("Window \"" + windowNameString+ "\" Creation Succeeded");
     
-    return 0;
-}
-
-int drawBackground(SDL_Renderer* renderer, SDL_Color color){
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderClear(renderer);
-    return 0;
-}
-
-int drawRect(SDL_Renderer* renderer, float x, float y, float width, float height, SDL_Color color){
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_FRect rect = {x, y, width, height};
-    SDL_RenderFillRect(renderer, &rect);
     return 0;
 }
