@@ -3,9 +3,12 @@
 
 class Scene {
     private:
-
+        Engine* m_engine;
+    
     public:
-        bool init();
-        void run();
-        void shutdown();
+        virtual ~Scene() = default;
+
+        bool Init(Engine* engine);
+        void update();
+        void Shutdown();
 };

@@ -8,7 +8,7 @@ bool Engine::init(){
     console.Init(this);
     registerCommands(this);
 
-    if (windowInit(this, &window, &renderer, "SunShine", 1280, 720) != 0) {
+    if (windowInit(this, &window, &renderer, "SunShine", 1280, 720) != 0){
         return -1; 
     }
 
