@@ -142,6 +142,21 @@ set_target_properties(${GAME_NAME} PROPERTIES
 )
 
 # ==================================================
+# MinGW DLL Copy & Static Linking Solutions
+# ==================================================
+if(MINGW)
+    # 1. Statically link GCC runtimes so libgcc_s_seh-1.dll and libstdc++-6.dll aren't needed
+    target_link_options(${GAME_NAME} PRIVATE "-static-libgcc" "-static-libstdc++")
+
+    # 2. Automatically copy SDL3.dll to the executable output folder after building
+    add_custom_command(TARGET ${GAME_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:SDL3::SDL3>
+        $<TARGET_FILE_DIR:${GAME_NAME}>
+    )
+endif()
+
+# ==================================================
 # Build Information
 # ==================================================
 

@@ -4,6 +4,10 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <functional>
+#include <vector>
+#include <sstream>
 
 // Windows/ Linux
 #if defined(_WIN32) || defined(_WIN64)
@@ -16,8 +20,10 @@
 
 // engine
 // engine/core
-#include <engine/core/engine.hpp>
 #include <engine/core/logger.hpp>
+#include <engine/core/commands.hpp>
+#include <engine/core/engine.hpp>
+
 
 // engine/graphics
 #include <engine/graphics/renderer.hpp>

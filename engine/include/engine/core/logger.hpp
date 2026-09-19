@@ -1,13 +1,33 @@
 #pragma once
 #include <engine/engine.hpp>
 
-void InitConsoleEngine();
-void UpdateConsoleInput();
-void ShutdownConsoleEngine();
+class Engine;
 
-void DebugLog(std::string message);
-void InfoLog(std::string message);
-void WarnLog(std::string message);
-void ErrorLog(std::string message);
+class ConsoleEngine {
+    public:
+        using CommandHandler = std::function<void(const std::vector<std::string>& args)>;
 
-inline std::string current_input_buffer = "";
+        void Init(Engine* engine);
+        void Shutdown();
+        void RegisterCommand(const std::string& name, CommandHandler handler);
+    
+        void DebugLog(const std::string& message);
+        void InfoLog(const std::string& message);
+        void WarningLog(const std::string& message);
+        void ErrorLog(const std::string& message);
+    
+        void UpdateConsoleInput();
+
+        void ExecuteConsoleCommand(const std::string& full_line);
+
+    private:
+        std::string current_input_buffer;
+        std::unordered_map<std::string, CommandHandler> commands;
+
+        void PrintLogLine(const std::string& prefix, const std::string& message, const std::string& color_code = "\033[0m");
+
+    #ifdef SUNSHINE_POSIX
+        void SetTerminalRawMode(bool enable);
+        bool POSIX_kbhit();
+    #endif
+};

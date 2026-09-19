@@ -1,16 +1,16 @@
 #include <engine/engine.hpp>
 
-
-
 bool Engine::init(){
     window = nullptr;
     renderer = nullptr;
     
-    if (windowInit(&window, &renderer, "SunShine", 1280, 720) != 0) {
+    ConsoleEngine console;
+    console.Init(this);
+    registerCommands(this);
+
+    if (windowInit(this, &window, &renderer, "SunShine", 1280, 720) != 0) {
         return -1; 
     }
-
-    InitConsoleEngine();
 
     active = true;
     return 1;
@@ -24,7 +24,7 @@ void Engine::run(){
             }
         }
 
-        UpdateConsoleInput();
+        console.UpdateConsoleInput();
         
         drawBackground(renderer, Silver);
 
@@ -54,15 +54,11 @@ void Engine::run(){
         }
 
         SDL_Delay(1000 / targetframerate);
-
-        if (current_input_buffer == "exit"){
-            active = false;
-        }
     }
 }
 
 void Engine::shutdown(){
-    ShutdownConsoleEngine();
+    console.Shutdown();
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

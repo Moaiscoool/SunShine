@@ -15,6 +15,8 @@ class Engine {
     float y = 0;
 
     public:
+        ConsoleEngine console;
+
         bool init();
         void run();
         void shutdown();

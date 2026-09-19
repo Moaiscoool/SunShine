@@ -1,6 +1,6 @@
 #include <engine/engine.hpp>
 
-int windowInit(SDL_Window** window, SDL_Renderer** renderer, const char* windowName, int width, int height) {
+int windowInit(Engine* engine, SDL_Window** window, SDL_Renderer** renderer, const char* windowName, int width, int height) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
         return -1; 
@@ -21,7 +21,7 @@ int windowInit(SDL_Window** window, SDL_Renderer** renderer, const char* windowN
     }
 
     std::string windowNameString(windowName);
-    InfoLog("Window \"" + windowNameString+ "\" Creation Succeeded");
+    //InfoLog("Window \"" + windowNameString+ "\" Creation Succeeded");
     
     return 0;
 }
