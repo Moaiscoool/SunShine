@@ -74,6 +74,7 @@ add_library(GameEngine STATIC
 target_include_directories(GameEngine
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/game/include
 )
 
 target_link_libraries(GameEngine

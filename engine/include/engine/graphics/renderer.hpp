@@ -18,6 +18,21 @@ inline const SDL_Color Teal = {0, 128, 128, 255};
 inline const SDL_Color White = {255, 255, 255, 255};
 inline const SDL_Color Yellow = {255, 255, 0, 255};
 
+struct rect;
 
-int drawBackground(SDL_Renderer* renderer, SDL_Color color);
-int drawRect(SDL_Renderer* renderer, float x, float y, float width, float height, SDL_Color color);
+
+
+class RenderEngine {
+    private:
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+
+    public:
+        int drawBackground(SDL_Color color);
+        int drawRect(float x, float y, float width, float height, SDL_Color color);
+
+        void render();
+
+        bool Init(Engine* engine);
+        void Shutdown();
+};

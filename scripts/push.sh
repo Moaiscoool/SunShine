@@ -33,6 +33,15 @@ if [[ -z "$COMMIT_MESSAGE" ]]; then
     exit 1
 fi
 
+# New Feature: Select Push Destination
+echo
+echo "Where would you like to push?"
+echo "1) GitHub (origin)"
+echo "2) Local Git Server (local)"
+echo "3) Both"
+echo "4) Skip pushing (Commit only)"
+read -r -p "Select an option [1-4]: " PUSH_CHOICE
+
 echo
 echo "Staging files..."
 git add .
@@ -40,9 +49,37 @@ git add .
 echo "Creating commit..."
 git commit -m "$COMMIT_MESSAGE"
 
+# Get the current branch name automatically
+CURRENT_BRANCH=$(git branch --show-current)
+
 echo
-echo "Pushing to GitHub..."
-git push
+case "$PUSH_CHOICE" in
+    1)
+        echo "Pushing to GitHub..."
+        git push origin "$CURRENT_BRANCH"
+        ;;
+    2)
+        echo "Pushing to Local Git Server..."
+        git push local "$CURRENT_BRANCH"
+        ;;
+    3)
+        echo "Pushing to GitHub..."
+        git push origin "$CURRENT_BRANCH"
+        echo "Pushing to Local Git Server..."
+        git push local "$CURRENT_BRANCH"
+        ;;
+    4)
+        echo "Skipping push step."
+        echo "================================"
+        echo "      Commit successful!"
+        echo "================================"
+        exit 0
+        ;;
+    *)
+        echo "Invalid selection. Commit created, but skipping push."
+        exit 1
+        ;;
+esac
 
 echo
 echo "================================"
