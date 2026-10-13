@@ -23,14 +23,27 @@ git status --short
 echo "--------------------------------"
 echo
 
-# Ask for commit message
-read -r -p "Commit message: " COMMIT_MESSAGE
+# CHECK: Do we actually have local modifications?
+if [[ -n $(git status --porcelain) ]]; then
+    # Ask for commit message
+    read -r -p "Commit message: " COMMIT_MESSAGE
 
-# Don't allow an empty message
-if [[ -z "$COMMIT_MESSAGE" ]]; then
+    # Don't allow an empty message
+    if [[ -z "$COMMIT_MESSAGE" ]]; then
+        echo
+        echo "ERROR: Commit message cannot be empty."
+        exit 1
+    fi
+
     echo
-    echo "ERROR: Commit message cannot be empty."
-    exit 1
+    echo "Staging files..."
+    git add .
+
+    echo "Creating commit..."
+    git commit -m "$COMMIT_MESSAGE"
+else
+    echo "Working tree clean. No new changes to commit."
+    echo "Proceeding directly to push options..."
 fi
 
 # New Feature: Select Push Destination
@@ -39,15 +52,8 @@ echo "Where would you like to push?"
 echo "1) GitHub (origin)"
 echo "2) Local Git Server (local)"
 echo "3) Both"
-echo "4) Skip pushing (Commit only)"
+echo "4) Skip pushing"
 read -r -p "Select an option [1-4]: " PUSH_CHOICE
-
-echo
-echo "Staging files..."
-git add .
-
-echo "Creating commit..."
-git commit -m "$COMMIT_MESSAGE"
 
 # Get the current branch name automatically
 CURRENT_BRANCH=$(git branch --show-current)
@@ -70,13 +76,10 @@ case "$PUSH_CHOICE" in
         ;;
     4)
         echo "Skipping push step."
-        echo "================================"
-        echo "      Commit successful!"
-        echo "================================"
         exit 0
         ;;
     *)
-        echo "Invalid selection. Commit created, but skipping push."
+        echo "Invalid selection. Skipping push."
         exit 1
         ;;
 esac
